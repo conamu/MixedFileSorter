@@ -60,6 +60,9 @@ func main() {
 			// General path for deduplicated file collection
 			orderedFilesFolder := currentPath + "orderedFiles/"
 			generalFolderDestination := orderedFilesFolder + "deduped/"
+			if err := os.MkdirAll(generalFolderDestination, 0755); err != nil {
+				log.Fatal(err.Error())
+			}
 
 			// Copy the file into the split folders
 			for _, directoryToPutStuffIn := range innerFolders {
