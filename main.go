@@ -23,6 +23,7 @@ func main() {
 	}
 	log.Println("Working in current directory: " + currentPath)
 
+	// Read folderstructure/files in directory to order by key word
 	folders, err := os.ReadDir(currentPath)
 	handleError(err)
 
@@ -51,20 +52,29 @@ func main() {
 			if innerFile.IsDir() {
 				continue
 			}
+			// Split dir names into single names to sort the files
 			innerFolders := strings.Split(dir.Name(), ", ")
 			log.Println("Splitting folder " + dir.Name() + " into " + strings.Join(innerFolders, " "))
 			log.Println("Processing file " + innerFile.Name())
 
+			// General path for deduplicated file collection
+			orderedFilesFolder := currentPath + "orderedFiles/"
+			generalFolderDestination := orderedFilesFolder + "deduped/"
+
 			// Copy the file into the split folders
 			for _, directoryToPutStuffIn := range innerFolders {
-				pathForFile := currentPath + "orderedFiles/" + directoryToPutStuffIn + "/"
+				// This is the folder of the file
+				pathForFile := orderedFilesFolder + directoryToPutStuffIn + "/"
+				// This will be the path for the copied file
 				filePath := pathForFile + directoryToPutStuffIn + innerFile.Name()
 
 				if err := os.MkdirAll(pathForFile, 0755); err != nil {
 					log.Fatal(err.Error())
 				}
+				// This is the path of the original file to copy
 				pathOfFileToCopy := pathOfDirectory + "/" + innerFile.Name()
-				handleError(copyFileToFolder(pathOfFileToCopy, filePath))
+				// Execute the copy process
+				handleError(copyFileToFolder(pathOfFileToCopy, filePath, generalFolderDestination))
 
 			}
 
@@ -74,7 +84,7 @@ func main() {
 
 }
 
-func copyFileToFolder(source, destination string) error {
+func copyFileToFolder(source, destination, genDestination string) error {
 
 	input, err := ioutil.ReadFile(source)
 	if err != nil {
@@ -82,12 +92,19 @@ func copyFileToFolder(source, destination string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(destination, input, 0644)
+	handleError(copyFileToDestination(destination, input))
+	// To have one folder with all files de-duplciated
+	handleError(copyFileToDestination(genDestination, input))
+
+	return nil
+}
+
+func copyFileToDestination(destination string, file []byte) error {
+	err = ioutil.WriteFile(destination, file, 0644)
 	if err != nil {
 		log.Println("Error creating", destination)
 		return err
 	}
-
 	return nil
 }
 
