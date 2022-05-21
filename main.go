@@ -17,6 +17,7 @@ func main() {
 	if len(os.Args) < 2 {
 		// Get Current path to work in
 		currentPath, err = os.Getwd()
+		currentPath = currentPath + "/"
 		handleError(err)
 	} else {
 		currentPath = os.Args[1]
@@ -76,8 +77,9 @@ func main() {
 				}
 				// This is the path of the original file to copy
 				pathOfFileToCopy := pathOfDirectory + "/" + innerFile.Name()
+				genPathOfFileToCopy := generalFolderDestination + "/" + innerFile.Name()
 				// Execute the copy process
-				handleError(copyFileToFolder(pathOfFileToCopy, filePath, generalFolderDestination))
+				handleError(copyFileToFolder(pathOfFileToCopy, filePath, genPathOfFileToCopy))
 
 			}
 
