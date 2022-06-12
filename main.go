@@ -1,8 +1,8 @@
 package main
 
 import (
+	"OrderByKeyword/util"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -18,7 +18,7 @@ func main() {
 		// Get Current path to work in
 		currentPath, err = os.Getwd()
 		currentPath = currentPath + "/"
-		handleError(err)
+		util.HandleError(err)
 	} else {
 		currentPath = os.Args[1]
 	}
@@ -26,7 +26,7 @@ func main() {
 
 	// Read folderstructure/files in directory to order by key word
 	folders, err := os.ReadDir(currentPath)
-	handleError(err)
+	util.HandleError(err)
 
 	log.Println("Processing these directories: ")
 	for _, dir := range folders {
@@ -46,7 +46,7 @@ func main() {
 		log.Println("Processing directory " + dir.Name())
 
 		innerFiles, err := os.ReadDir(pathOfDirectory)
-		handleError(err)
+		util.HandleError(err)
 
 		// Get info of the File to Copy
 		for _, innerFile := range innerFiles {
@@ -79,7 +79,7 @@ func main() {
 				pathOfFileToCopy := pathOfDirectory + "/" + innerFile.Name()
 				genPathOfFileToCopy := generalFolderDestination + "/" + innerFile.Name()
 				// Execute the copy process
-				handleError(copyFileToFolder(pathOfFileToCopy, filePath, genPathOfFileToCopy))
+				util.HandleError(util.CopyFileToFolder(pathOfFileToCopy, filePath, genPathOfFileToCopy))
 
 			}
 
@@ -87,34 +87,4 @@ func main() {
 
 	}
 
-}
-
-func copyFileToFolder(source, destination, genDestination string) error {
-
-	input, err := ioutil.ReadFile(source)
-	if err != nil {
-		log.Println("Error reading", source)
-		return err
-	}
-
-	handleError(copyFileToDestination(destination, input))
-	// To have one folder with all files de-duplciated
-	handleError(copyFileToDestination(genDestination, input))
-
-	return nil
-}
-
-func copyFileToDestination(destination string, file []byte) error {
-	err = ioutil.WriteFile(destination, file, 0644)
-	if err != nil {
-		log.Println("Error creating", destination)
-		return err
-	}
-	return nil
-}
-
-func handleError(err error) {
-	if err != nil {
-		log.Fatalln("Program encountered an error " + err.Error())
-	}
 }
