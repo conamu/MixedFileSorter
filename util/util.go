@@ -14,7 +14,7 @@ func CopyFileToFolder(source, destination, genDestination string) error {
 	}
 
 	HandleError(CopyFileToDestination(destination, input))
-	// To have one folder with all files de-duplciated
+	// To have one folder with all files de-duplicated
 	HandleError(CopyFileToDestination(genDestination, input))
 
 	return nil
