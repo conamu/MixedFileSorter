@@ -1,25 +1,20 @@
 package flow
 
-/*
-var (
-	currentPath string
-	err         error
+import (
+	"OrderByKeyword/util"
+	"fmt"
+	"log"
+	"os"
+	"strings"
 )
 
-*/
+func OrderByKeywordFolders() {
 
-/*
-	if len(os.Args) < 2 {
-		// Get Current path to work in
-		currentPath, err = os.Getwd()
-		currentPath = currentPath + "/"
-		util.HandleError(err)
-	} else {
-		currentPath = os.Args[1]
-	}
-	log.Println("Working in current directory: " + currentPath)
+	// Step 1: Get path of Folder to Process
+	currentPath, err := util.GetCurrentWorkingPath()
+	util.HandleError(err)
 
-	// Read folderstructure/files in directory to order by key word
+	// Step 2: Read Folder content of currentPath
 	folders, err := os.ReadDir(currentPath)
 	util.HandleError(err)
 
@@ -30,9 +25,9 @@ var (
 		}
 	}
 
-	// Range over every folder
+	// Step 3: Iterate over every directory
 	for _, dir := range folders {
-		// If no directory, skip this entry
+		// If not a directory, skip this entry
 		if !dir.IsDir() {
 			continue
 		}
@@ -81,5 +76,4 @@ var (
 		}
 
 	}
-
-*/
+}

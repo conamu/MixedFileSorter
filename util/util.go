@@ -1,8 +1,15 @@
 package util
 
 import (
+	"errors"
 	"io/ioutil"
 	"log"
+	"os"
+)
+
+var (
+	currentPath string
+	err         error
 )
 
 func CopyFileToFolder(source, destination, genDestination string) error {
@@ -33,4 +40,23 @@ func HandleError(err error) {
 	if err != nil {
 		log.Fatalln("Program encountered an error " + err.Error())
 	}
+}
+
+func GetCurrentWorkingPath() (string, error) {
+	if len(os.Args) < 2 {
+		// Get Current path to work in
+		currentPath, err = os.Getwd()
+		currentPath = currentPath + "/"
+		if err != nil {
+			return "", err
+		}
+	} else {
+		currentPath = os.Args[1]
+	}
+
+	if currentPath == "" {
+		return "", errors.New("current working path returned empty")
+	}
+	log.Println("Working in current directory: " + currentPath)
+	return currentPath, nil
 }
