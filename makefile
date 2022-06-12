@@ -1,2 +1,4 @@
 build:
-	go build -o (pwd)/dist/OBK .
+	rm -rd dist/
+	mkdir dist/
+	go build -o dist/OBK .
